@@ -1,0 +1,21 @@
+class Solution {
+    public static void findSimilar(TreeNode root,List<Integer> arr){
+        if(root==null) return ;
+        if(root.left==null && root.right==null){
+            arr.add(root.val);
+        }
+        findSimilar(root.left,arr);
+        findSimilar(root.right,arr);
+
+    }
+    public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+        if(root1==null && root2==null) return true;
+        if((root1==null && root2!=null) || (root2==null && root1!=null)) return false;
+        ArrayList<Integer> arr1=new ArrayList<>();
+        ArrayList<Integer> arr2=new ArrayList<>();
+       findSimilar(root1,arr1);
+       findSimilar(root2,arr2);
+       return arr1.equals(arr2);
+        
+    }
+}
