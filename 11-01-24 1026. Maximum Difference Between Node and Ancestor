@@ -1,0 +1,38 @@
+1026. Maximum Difference Between Node and Ancestor
+
+Given the root of a binary tree, find the maximum value v for 
+which there exist different nodes a and b where v = |a.val - b.val| and a is an ancestor of b.
+
+A node a is an ancestor of b if either: any child of a is equal to b or any child of a is an ancestor of b.
+
+
+class Solution{
+  int ans=0;
+  public int maxAncestorDiff(TreeNode root) {
+      dfs(root);
+      return ans;
+  }
+  public Pair<Integer,Integer> dfs(TreeNode root){
+      if(root==null) return new Pair<>(Integer.MAX_VALUE,Integer.MIN_VALUE);
+      Pair<Integer,Integer>leftMinMax=dfs(root.left);
+      Pair<Integer,Integer>rightMinMax=dfs(root.right);
+  
+      int leftMin=leftMinMax.getKey();
+      int leftMax=leftMinMax.getValue();
+  
+      int rightMin=rightMinMax.getKey();
+      int rightMax=rightMinMax.getValue();
+  
+      int currMin=Math.min(root.val,Math.min(leftMin,rightMin));
+      int currMax=Math.max(root.val,Math.max(rightMax,leftMax));
+  
+       ans=Math.max(ans,Math.max(root.val-currMin,currMax-root.val));
+  
+      return new Pair<>(currMin,currMax);
+
+
+
+    }
+
+   
+}
