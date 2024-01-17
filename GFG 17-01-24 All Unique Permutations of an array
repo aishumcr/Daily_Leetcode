@@ -1,0 +1,45 @@
+Given an array arr[] of length n. Find all possible unique permutations of the array in sorted order. A sequence A is greater than sequence B if there is an index i for which Aj = Bj for all j<i and Ai > Bi.
+
+Example 1:
+
+Input: 
+n = 3
+arr[] = {1, 2, 1}
+Output: 
+1 1 2
+1 2 1
+2 1 1
+Explanation:
+These are the only possible unique permutations
+for the given array.
+
+
+class Solution {
+    public static void recur(ArrayList<Integer> a,ArrayList<Integer> arr,HashSet<ArrayList<Integer>> res,int[] freq){
+        if(a.size()==arr.size()){
+            res.add(new ArrayList<>(a));
+            return ;
+        }
+        for(int i=0;i<arr.size();i++){
+            if(freq[i]==0){
+                a.add(arr.get(i));
+                freq[i]=1;
+                recur(a,arr,res,freq);
+                freq[i]=0;
+                a.remove(a.size()-1);
+            }
+        }
+    }
+   
+    static ArrayList<ArrayList<Integer>> uniquePerms(ArrayList<Integer> arr , int n) {
+    Collections.sort(arr);
+      HashSet<ArrayList<Integer>> res=new LinkedHashSet<>();
+      ArrayList<Integer> a=new ArrayList<>();
+      int[] freq=new int[n];
+      for(int i=0;i<n;i++) freq[i]=0;
+      recur(a,arr,res,freq);
+      ArrayList<ArrayList<Integer>> ans=new ArrayList<>(res);
+      return ans;
+       
+    }
+  }
