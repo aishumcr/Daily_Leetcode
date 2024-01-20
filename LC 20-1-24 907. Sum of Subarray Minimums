@@ -1,0 +1,97 @@
+BRUTE FORCE::
+
+class Solution {
+    public int sumSubarrayMins(int[] arr) {
+        int sum=0;
+        int m=(int)Math.pow(10,9);
+        m=m+7;
+       for(int i=0;i<arr.length;i++){
+          int min=arr[i];
+          sum+=min;
+          for(int j=i+1;j<arr.length;j++){
+              if(min>arr[j]) min=arr[j];
+              sum=(sum+min)%m;
+          }
+          
+       } 
+       return sum;
+    }
+}
+
+
+Problem: Sum of Subarray Minimums
+Given: An array of numbers
+
+Objective: Find the sum of the smallest numbers in all possible subarrays.
+
+Step-by-Step Explanation:
+Initialize:
+
+Create two lists (think of them as containers): left and right.
+Create two stacks: s1 and s2.
+Calculate Left Boundaries:
+
+Go through the array from left to right.
+For each number, check how far to the left you can go until you find a smaller number.
+Store this information in the left list.
+Calculate Right Boundaries:
+
+Go through the array from right to left.
+For each number, check how far to the right you can go until you find a smaller or equal number.
+Store this information in the right list.
+Calculate Final Sum:
+
+For each number in the array:
+Multiply the number by its corresponding left and right boundaries.
+Add this result to a running sum.
+Return Result:
+
+Return the final sum, but make sure it's not too big by taking the result modulo 10^9 + 7.
+
+
+
+
+
+class Solution {
+    private final int MOD = 1000000007;
+
+    public int sumSubarrayMins(int[] arr) {
+        int n = arr.length;
+        Stack<Integer> s1 = new Stack<>();
+        Stack<Integer> s2 = new Stack<>();
+        long[] left = new long[n];
+        long[] right = new long[n];
+
+        // Calculate left boundaries
+        for (int i = 0; i < n; ++i) {
+            while (!s1.isEmpty() && arr[s1.peek()] > arr[i]) {
+                s1.pop();
+            }
+            left[i] = s1.isEmpty() ? i + 1 : i - s1.peek();
+            s1.push(i);
+        }
+
+        // Calculate right boundaries
+        for (int i = n - 1; i >= 0; --i) {
+            while (!s2.isEmpty() && arr[s2.peek()] >= arr[i]) {
+                s2.pop();
+            }
+            right[i] = s2.isEmpty() ? n - i : s2.peek() - i;
+            s2.push(i);
+        }
+
+        // Calculate the final sum
+        long result = 0;
+        for (int i = 0; i < n; ++i) {
+            result = (result + arr[i] * left[i] * right[i]) % MOD;
+        }
+
+        return (int) result;
+    }
+}
+
+
+
+
+
+
