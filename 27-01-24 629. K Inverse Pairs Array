@@ -1,0 +1,90 @@
+For an integer array nums, an inverse pair is a pair of integers [i, j] where 0 <= i < j < nums.length and nums[i] > nums[j].
+
+Given two integers n and k, return the number of different arrays consist of numbers from 1 to n such that there are exactly k inverse pairs. Since the answer can be huge, return it modulo 109 + 7.
+
+ 
+
+Example 1:
+
+Input: n = 3, k = 0
+Output: 1
+Explanation: Only the array [1,2,3] which consists of numbers from 1 to 3 has exactly 0 inverse pairs.
+Example 2:
+
+Input: n = 3, k = 1
+Output: 2
+Explanation: The array [1,3,2] and [2,1,3] have exactly 1 inverse pair.
+
+
+class Solution {
+private:
+    const int mod=int(1e9+7);
+    int dp[1001][1001];
+    int f(int n,int k) {
+        //base case
+        if(k<=0) return k==0;
+        if(dp[n][k]!=-1) return dp[n][k];
+
+
+        int ans=0;
+        for(int i=0;i<n;++i) {
+            ans+=f(n-1,k-i);
+            ans%=mod;
+        }
+        return dp[n][k]=ans;
+    }
+public:
+    int kInversePairs(int n, int k) {
+        memset(dp,-1,sizeof(dp));
+        return f(n,k);
+    }
+};
+
+
+
+
+
+
+
+class Solution {
+private:
+    const int mod=int(1e9+7);
+public:
+    int kInversePairs(int n, int k) {
+        vector<vector<int>> dp(n+1,vector<int>(k+1,0));
+        //base case
+        for(int N=0;N<=n;++N) dp[N][0]=1;
+        for(int N=1;N<=n;++N) {
+            for(int K=0;K<=k;++K) {
+                int ans=0;
+                for(int i=0;i<min(N,K+1);++i) {
+                    ans+=dp[N-1][K-i];
+                    ans%=mod;
+                }
+                dp[N][K]=ans;
+            }
+        }
+        return dp[n][k];
+    }
+};
+
+
+
+
+class Solution {
+private:
+    const int mod=int(1e9+7);
+public:
+    int kInversePairs(int n, int k) {
+        vector<int> prev(k+1,0),curr(k+1,0);
+        prev[0]=curr[0]=1;
+        for(int N=1;N<=n;++N) {
+            for(int K=0;K<=k;++K) {
+                curr[K] = (prev[K] + (K > 0 ? curr[K - 1] : 0)) % mod;
+                curr[K] = (curr[K] + mod - (K >= N ? prev[K-N] : 0)) % mod;
+            }
+            prev = curr;
+        }
+        return curr[k];
+    }
+};
