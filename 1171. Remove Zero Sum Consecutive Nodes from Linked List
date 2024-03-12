@@ -1,0 +1,94 @@
+Given the head of a linked list, we repeatedly delete consecutive sequences of nodes that sum to 0 until there are no such sequences.
+
+After doing so, return the head of the final linked list.  You may return any such answer.
+
+ 
+
+(Note that in the examples below, all sequences are serializations of ListNode objects.)
+
+Example 1:
+
+Input: head = [1,2,-3,3,1]
+Output: [3,1]
+Note: The answer [1,2,1] would also be accepted.
+Example 2:
+
+Input: head = [1,2,3,-3,4]
+Output: [1,2,4]
+Example 3:
+
+Input: head = [1,2,3,-3,-2]
+Output: [1]
+ 
+
+Constraints:
+
+The given linked list will contain between 1 and 1000 nodes.
+Each node in the linked list has -1000 <= node.val <= 1000.
+
+
+SOLUTION::1
+
+class Solution {
+    public ListNode removeZeroSumSublists(ListNode head) {
+        ListNode node=new ListNode(0,head);
+        Map<Integer,ListNode>hm=new HashMap<>();
+        int pre_sum=0;
+        for(ListNode ptr=node;ptr!=null;ptr=ptr.next){
+            pre_sum+=ptr.val;
+            hm.put(pre_sum,ptr);
+        }
+        pre_sum=0;
+        for(ListNode ptr=node;ptr!=null;ptr=ptr.next){
+            pre_sum+=ptr.val;
+            ptr.next=hm.get(pre_sum).next;
+        }
+        return node.next;
+    }
+}
+
+
+SOLUTION ::2
+
+class Solution {
+    public ListNode removeZeroSumSublists(ListNode head) {
+        List<Integer>arr=new ArrayList<>();
+        ListNode dup=head;
+        int n=0;
+        while(dup!=null){
+            arr.add(dup.val);
+            dup=dup.next;
+            n++;
+        }
+        int i=0,j=0;
+        int start=-1;
+        while(i<n){
+            j=i;
+            int sum=0;
+            start=-1;
+            while(j<n){
+                sum+=arr.get(j);
+                if(sum==0){
+                    for(start=i;start<=j;start++){
+                        arr.set(start,Integer.MAX_VALUE);
+                    }
+                    System.out.println(arr);
+                    break;
+                }
+                j++;
+            }
+            if(start!=-1) i=j+1;
+            else
+                i++;
+        }
+        ListNode dummy=new ListNode(-10001);
+        ListNode temp=dummy;
+        for(i=0;i<arr.size();i++){
+            if(arr.get(i)!=Integer.MAX_VALUE){
+                temp.next=new ListNode(arr.get(i));
+                temp=temp.next;
+            }
+        }
+        return dummy.next;
+    }
+}
