@@ -1,0 +1,87 @@
+Input: s = "leEeetcode"
+Output: "leetcode"
+Explanation: In the first step, either you choose i = 1 or i = 2, both will result "leEeetcode" to be reduced to "leetcode".
+
+
+class Solution {
+    public String makeGood(String s) {
+        if (s.length() == 0 || s.length() == 1)
+            return s;
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(s);
+
+        int i = 0;
+
+        while (i < sb.length() - 1)
+        {
+            char leftChar = sb.charAt(i);
+            char rightChar = sb.charAt(i + 1);
+
+            if (Math.abs(leftChar - rightChar) == 32)
+            {
+                sb.delete(i, i + 2);
+                if (i > 0)
+                    i--;
+            }
+            else
+            {
+                i++;
+            } 
+        }
+
+        return sb.toString();
+    }
+}
+
+
+
+class Solution {
+    public String makeGood(String s) {
+        Stack<Character> stack = new Stack<>();
+        
+        for (char c : s.toCharArray()) {
+            if (!stack.isEmpty() && Math.abs(c - stack.peek()) == 32) {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+        
+        StringBuilder result = new StringBuilder();
+        while (!stack.isEmpty()) {
+            result.insert(0, stack.pop());
+        }
+        
+        return result.toString();
+    }
+}
+
+
+class Solution {
+    public String makeGood(String s) {
+        int i=1,n=s.length();
+        StringBuilder sb=new StringBuilder(s);
+        while(i<n){
+            char ch1=sb.charAt(i);
+            char ch0=sb.charAt(i-1);
+            int Ach1=(int)ch1;
+            Ach1=Ach1^32;
+            if(Ach1==(int)ch0){
+                String sb1=sb.substring(0,i-1);
+                if(i+1<n){
+                    sb1=sb1+sb.substring(i+1,n);
+                }
+                sb=new StringBuilder(sb1);
+                n=sb.length();
+                i=1;
+            }
+            else{
+                i++;
+            }
+        }
+        return sb.toString();
+    }
+}
+
